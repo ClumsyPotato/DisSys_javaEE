@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<h1>Airport Esslingen</h1>
+
+	<h:form>
+		<p:panel header="New airplane">
+			Airplane name: <p:inputText value="#{airportBean.airplane.name}" /><p/>
+			<p:commandButton value="Add airplane" action="#{airportBean.store}" update="airplaneTableForm :RunwayTableForm"/>
+		</p:panel>
+	</h:form>
+	<p/>
+	<h:form id="airplaneTableForm">
+		<p:dataTable value="#{airportBean.airplanes}" var="airplane">
+			<p:column headerText="Airplanes">
+				<h:outputText value="#{airplane.name}  #{airplane.id}"  />
+				 <p:commandButton value="Land" update="RunwayTableForm :airplaneTableForm :ParkingForm" disabled="#{!airplane.flying}">
+				   <f:actionListener binding="#{airportBean.landPlane(airplane.id)}" update="RunwayTableForm" />
+				  </p:commandButton> 
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	<h:form id="RunwayTableForm">
+		<p:dataTable value="#{airportBean.runways}" var="runway">
+		<p:column headerText="Le Landebahn">
+			<!-- <h:link value="#{runway.number}" outcome="runway">
+			 	<f:param name="number" value="#{runway.number}"/>  
+			</h:link> -->
+			  <h:outputText value ="#{runway.toString()}"/>
+			  <p:commandButton value="Park"  update="RunwayTableForm :ParkingForm">
+			  <f:actionListener binding="#{airportBean.parkPlane(runway,airplane.id)}" update="RunwayTableForm"/>
+			  </p:commandButton>
+		</p:column>
+		</p:dataTable>
+	</h:form>
+	<h:form id="ParkingForm">
+		<p:dataTable value="#{airportBean.parkingSlots}" var="slots">
+		  <p:column headerText="Le Airport">
+			  <h:outputText value="#{slots.toString()}" />
+			<!--  <p:commandButton value="update" update="RunwayTableForm"/> -->
+		</p:column> 
+		</p:dataTable>
+	</h:form>
+	
+</h:body>
+</html>
